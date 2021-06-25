@@ -98,9 +98,7 @@ class Challenge {
               cellsArray,
               visitedAddresses
             );
-          } /* else if (j === cell.refTo.length - 1) {
-            console.log("NO CIRCULAR REFERENCE");
-          } */
+          }
         }
       }
     }
