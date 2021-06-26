@@ -56,9 +56,15 @@ class Challenge {
         } else if (cellFormula.nodeType === "func") {
           // funcRefNode
           let cellFormulaFuncArgs = cellFormula.funcArgs;
+          let refToAddresses = cellFormulaFuncArgs.filter((cell) => {
+            if(cell.nodeType === "ref") {
+              return cell.address;
+            }
+          });
           let ref = {
             key: spreadSheetCells[i].address,
-            refTo: cellFormulaFuncArgs.map((cell) => cell.address),
+            //refTo: cellFormulaFuncArgs.map((cell) => cell.address),
+            refTo: refToAddresses.map(ref => ref.address)
           };
           refList.push(ref);
         }
@@ -150,10 +156,39 @@ let input3 = [
 
 let input4 = [];
 
-let input5 = [
+/* let input5 = [
   { address: "A1", formulaAST: new CellRefNode("A4") },
   { address: "A2", formulaAST: new CellRefNode("A2") },
+]; */
+
+let input5 = [
+  { address: 'A1', formulaAST: new NumberNode(2) },
+  { address: 'A2', formulaAST: new FuncNode('add', [new CellRefNode('A1'), new NumberNode(12)]) },
+  { address: 'A3', formulaAST: new FuncNode('add', [new CellRefNode('A1'), new CellRefNode('A2')]) },
+  { address: 'A4', formulaAST: new FuncNode('add', [new CellRefNode('A2'), new CellRefNode('A3')]) },
+  { address: 'A5', formulaAST: new FuncNode('add', [new CellRefNode('A3'), new CellRefNode('A4')]) },
+  { address: 'B1', formulaAST: new CellRefNode('A5') },
 ];
+
+let input6 = [
+  { address: 'A1', formulaAST: new NumberNode(2) },
+  { address: 'A2', formulaAST: new FuncNode('add', [new CellRefNode('A1'), new NumberNode(12)]) },
+  { address: 'A3', formulaAST: new CellRefNode('B1')  },
+  { address: 'A4', formulaAST: new FuncNode('add', [new CellRefNode('A2'), new CellRefNode('A3')]) },
+  { address: 'A5', formulaAST: new FuncNode('add', [new CellRefNode('A3'), new CellRefNode('A4')]) },
+  { address: 'B1', formulaAST: new CellRefNode('A5') },
+];
+
+let input7 = [
+  { address: 'A1', formulaAST: new NumberNode(2) },
+  { address: 'A2', formulaAST: new FuncNode('add', [new CellRefNode('A1'), new NumberNode(12)]) },
+  { address: 'A3', formulaAST: new CellRefNode('B2')  },
+  { address: 'A4', formulaAST: new FuncNode('add', [new CellRefNode('A2'), new CellRefNode('A3')]) },
+  { address: 'A5', formulaAST: new FuncNode('add', [new CellRefNode('A3'), new CellRefNode('A4')]) },
+  { address: 'B1', formulaAST: new CellRefNode('A5') },
+  { address: 'B2', formulaAST: new NumberNode(6) },
+];
+
 
 let challengeObj = new Challenge();
 console.log("---Input1 helper method start---");
@@ -176,4 +211,12 @@ console.log("================");
 console.log("---Input5 helper method start---");
 challengeObj.helper(input5);
 console.log("---Input5 helper method end---");
+console.log("================");
+console.log("---Input6 helper method start---");
+challengeObj.helper(input6);
+console.log("---Input6 helper method end---");
+console.log("================");
+console.log("---Input7 helper method start---");
+challengeObj.helper(input7);
+console.log("---Input7 helper method end---");
 console.log("================");
